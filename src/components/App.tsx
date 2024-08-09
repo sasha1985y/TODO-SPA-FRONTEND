@@ -11,6 +11,11 @@ function App() {
     console.log('works!!!');
   }
 
+  const deleteTodoClickHandler = (id: number): void => {
+    setTodos(todos.filter(todo => todo.id !== id));
+    console.log('deleted!!!');
+  }
+
   useEffect(() => {
     const fetchTodos = async () => {
       const {data} = await axios.get<Todo[]>('http://127.0.0.1:8000/todos/')
@@ -35,7 +40,10 @@ function App() {
             <p>{todo.name}</p>
             {" "}
             {todo.status && (
-              <span className="text-light-emphasis">(Completed)</span>
+              <>
+                <span className="text-light-emphasis">(Completed)</span>
+                <i onClick={() => deleteTodoClickHandler(todo.id)} className="fa-regular fa-trash-can"></i>
+              </>
             )}
           </div>
         ))}
