@@ -33,6 +33,10 @@ function App() {
         {todos?.map((todo: Todo) => (
           <div key={todo.id} className="text-center w-50 bg-secondary-subtle p-3 rounded-4">
             <p>{todo.name}</p>
+            {" "}
+            {todo.status && (
+              <span className="text-light-emphasis">(Completed)</span>
+            )}
           </div>
         ))}
       </div>
