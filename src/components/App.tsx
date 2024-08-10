@@ -39,7 +39,7 @@ function App() {
       </div>
       <div className="h-5 d-inline-block"></div>
       <div className="row">
-        <div className="col"></div>
+        <div className="col-md-2"></div>
         <ol className="col d-inline-block">
           {todos?.map((todo: Todo) => (
             <>
@@ -57,19 +57,19 @@ function App() {
             </>
           ))}
         </ol>
-        <div className="col"></div>
-      </div>
-      <div className="h-5 d-inline-block"></div>
-      <div className={`row h-15 w-20 bg-secondary p-2 ${openEditUI ? "" : "invisible"}`}>
-        <div className="col"></div>
-        <div className="col bg-body-secondary rounded-4">
-          <h1 className="text-center">Edit Todo</h1>
-          <i onClick={() => setOpenEditUI(false)} className="fs-1 fa-solid fa-xmark"></i>
-          <div className="div">
-            <input type="checkbox" />
+        <div className="col-md-4 d-flex justify-content-center">
+          <div className={`position-fixed row h-15 w-20 bg-secondary p-2 ${openEditUI ? "" : "invisible"}`}>
+            <div className="col-md-2"></div>
+            <div className="col bg-body-secondary rounded-4">
+              <span className="text-center fs-6">Edit Todo</span>
+              <div className="d-flex justify-content-center hstack gap-2">
+                <i onClick={() => setOpenEditUI(false)} className="fs-1 fa-solid fa-xmark"></i>
+                <input type="checkbox" checked={editStatus} onChange={() => setEditStatus(!editStatus)}/>
+              </div>
+            </div>
+            <div className="col-md-2"></div>
           </div>
         </div>
-        <div className="col"></div>
       </div>
     </div>
   );
