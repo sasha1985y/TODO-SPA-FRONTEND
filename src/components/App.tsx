@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import { Todo } from "../types";
+import { TodoListProps } from "../types";
 
 function App() {
 
@@ -41,30 +42,41 @@ function App() {
       <div className="row">
         <div className="col-md-2"></div>
         <ol className="col d-inline-block">
-          {todos?.map((todo: Todo) => (
-            <>
-              <li key={todo.unique_id} className="col bg-secondary-subtle p-3 rounded-4">
-                <p>{todo.name}</p>
+          {todos?.map((todo: Todo) => {
+            const chunkedName = todo.name.match(/.{1,50}/g); // Разбиваем строку на части по 20 символов
+            return (
+              <li key={todo.id} className="col bg-secondary-subtle p-3 rounded-4">
+                <p className="text-center">
+                  <div key={todo.id} className="todo-item">
+                    {chunkedName && chunkedName.map((chunk, chunkIndex) => (
+                      <span key={chunkIndex}>
+                        {chunk}
+                        {chunkIndex < chunkedName.length - 1 && <br />} {/* Добавляем <br> между частями */}
+                      </span>
+                    ))}
+                  </div>
+                </p>
                 {" "}
                 {todo.status && (
-                  <>
+                  <div className="text-center">
                     <span className="text-light-emphasis">(Completed)</span>
                     <i onClick={() => deleteTodoClickHandler(todo.id)} className="fa-regular fa-trash-can"></i>
-                  </>
+                  </div>
                 )}
               </li>
-              <ol className="h-5 d-inline-block"></ol>
-            </>
-          ))}
+            );
+          })}
         </ol>
-        <div className="col-md-4 d-flex justify-content-center">
-          <div className={`position-fixed row h-15 w-20 bg-secondary p-2 ${openEditUI ? "" : "invisible"}`}>
+        <div className="col-md-4">
+          <div className={`position-fixed row h-15 w-20 bg-secondary ${openEditUI ? "" : "invisible"}`}>
             <div className="col-md-2"></div>
             <div className="col bg-body-secondary rounded-4">
-              <span className="text-center fs-6">Edit Todo</span>
-              <div className="d-flex justify-content-center hstack gap-2">
-                <i onClick={() => setOpenEditUI(false)} className="fs-1 fa-solid fa-xmark"></i>
-                <input type="checkbox" checked={editStatus} onChange={() => setEditStatus(!editStatus)}/>
+              <div className="row">
+                <span className="col text-center fs-6">Edit</span>
+                <div className="col-md-3 align-middle">
+                  < input type="checkbox" checked={editStatus} onChange={() => setEditStatus(!editStatus)}/>
+                </div>
+                <i onClick={() => setOpenEditUI(false)} className="col-md-3 fs-5 fa-solid fa-xmark"></i>
               </div>
             </div>
             <div className="col-md-2"></div>
