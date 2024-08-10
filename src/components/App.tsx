@@ -35,7 +35,7 @@ function App() {
       <div className="d-flex justify-content-center hstack gap-2">
         <input className="w-75 bg-body-secondary rounded-start-pill"></input>
         <div onClick={addTodoClickHandler} className="w-20 bg-body-secondary rounded-end-pill border border-dark-subtle border-3">
-          <i className="text-secondary fa-solid fa-square-plus"></i>
+          <i className="text-success fa-solid fa-square-plus"></i>
         </div>
       </div>
       <div className="h-5 d-inline-block"></div>
@@ -45,7 +45,7 @@ function App() {
           {todos?.map((todo: Todo) => {
             const chunkedName = todo.name.match(/.{1,50}/g); // Разбиваем строку на части по 20 символов
             return (
-              <li key={todo.id} className="col bg-secondary-subtle p-3 rounded-4">
+              <li key={todo.id} className="col bg-secondary-subtle mb-1 rounded-4">
                 <p className="text-center">
                   <div key={todo.id} className="todo-item">
                     {chunkedName && chunkedName.map((chunk, chunkIndex) => (
@@ -58,9 +58,9 @@ function App() {
                 </p>
                 {" "}
                 {todo.status && (
-                  <div className="text-center">
+                  <div className="text-center position-relative">
                     <span className="text-light-emphasis">(Completed)</span>
-                    <i onClick={() => deleteTodoClickHandler(todo.id)} className="fa-regular fa-trash-can"></i>
+                    <i onClick={() => deleteTodoClickHandler(todo.id)} className="text-danger fs-3 position-absolute bottom-0 end-0 fa-regular fa-trash-can"></i>
                   </div>
                 )}
               </li>
@@ -76,7 +76,7 @@ function App() {
                 <div className="col-md-3 align-middle">
                   < input type="checkbox" checked={editStatus} onChange={() => setEditStatus(!editStatus)}/>
                 </div>
-                <i onClick={() => setOpenEditUI(false)} className="col-md-3 fs-5 fa-solid fa-xmark"></i>
+                <i onClick={() => setOpenEditUI(false)} className="text-danger col-md-3 fs-5 fa-solid fa-xmark"></i>
               </div>
             </div>
             <div className="col-md-2"></div>
