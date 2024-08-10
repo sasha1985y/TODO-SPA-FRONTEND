@@ -6,6 +6,9 @@ import { Todo } from "../types";
 function App() {
 
   const [todos, setTodos] = useState<Todo[]>([])
+  const [editStatus, setEditStatus] = useState(false)
+  const [editName, setEditName] = useState('')
+  const [openEditUI, setOpenEditUI] = useState(true)
 
   const addTodoClickHandler = (): void => {
     console.log('works!!!');
@@ -25,7 +28,8 @@ function App() {
   }, [])
 
   return (
-    <div className="vh-100 bg-secondary position-relative">
+    <div className="h-auto bg-secondary position-relative">
+      <div className="h-5 d-inline-block"></div>
       <h1 className="text-center">Todo App</h1>
       <div className="d-flex justify-content-center hstack gap-2">
         <input className="w-75 bg-body-secondary rounded-start-pill"></input>
@@ -34,19 +38,38 @@ function App() {
         </div>
       </div>
       <div className="h-5 d-inline-block"></div>
-      <div className="d-flex justify-content-center h-25 d-inline-block">
-        {todos?.map((todo: Todo) => (
-          <div key={todo.id} className="text-center w-50 bg-secondary-subtle p-3 rounded-4">
-            <p>{todo.name}</p>
-            {" "}
-            {todo.status && (
-              <>
-                <span className="text-light-emphasis">(Completed)</span>
-                <i onClick={() => deleteTodoClickHandler(todo.id)} className="fa-regular fa-trash-can"></i>
-              </>
-            )}
+      <div className="row">
+        <div className="col"></div>
+        <ol className="col d-inline-block">
+          {todos?.map((todo: Todo) => (
+            <>
+              <li key={todo.unique_id} className="col bg-secondary-subtle p-3 rounded-4">
+                <p>{todo.name}</p>
+                {" "}
+                {todo.status && (
+                  <>
+                    <span className="text-light-emphasis">(Completed)</span>
+                    <i onClick={() => deleteTodoClickHandler(todo.id)} className="fa-regular fa-trash-can"></i>
+                  </>
+                )}
+              </li>
+              <ol className="h-5 d-inline-block"></ol>
+            </>
+          ))}
+        </ol>
+        <div className="col"></div>
+      </div>
+      <div className="h-5 d-inline-block"></div>
+      <div className={`row h-15 w-20 bg-secondary p-2 ${openEditUI ? "" : "invisible"}`}>
+        <div className="col"></div>
+        <div className="col bg-body-secondary rounded-4">
+          <h1 className="text-center">Edit Todo</h1>
+          <i onClick={() => setOpenEditUI(false)} className="fs-1 fa-solid fa-xmark"></i>
+          <div className="div">
+            <input type="checkbox" />
           </div>
-        ))}
+        </div>
+        <div className="col"></div>
       </div>
     </div>
   );

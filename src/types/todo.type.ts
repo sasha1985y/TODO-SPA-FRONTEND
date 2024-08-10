@@ -3,4 +3,5 @@ export type Todo = {
     name: string;
     status: boolean;
     created_at: Date;
+    unique_id: string;
 }
