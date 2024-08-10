@@ -6,27 +6,57 @@ import { Todo } from "../types";
 function App() {
 
   const [todos, setTodos] = useState<Todo[]>([])
+  const [name, setName] = useState("")
   const [editStatus, setEditStatus] = useState(false)
   const [editName, setEditName] = useState('')
-  const [editTodo, setEditTodo] = useState({})
+  const [editTodo, setEditTodo] = useState({}); 
   const [openEditUI, setOpenEditUI] = useState(false)
 
-  const addTodoClickHandler = (): void => {
-    console.log('works!!!');
+  const addTodoHandler = (): void => {
+    const postTodo = async() => {
+      const postTodoData = {
+        name: name
+      }
+      const {data} = await axios.post('http://127.0.0.1:8000/todos/', postTodoData)
+      setTodos([...todos, data])
+      setName("")
+    }
+    postTodo()
   }
 
   const editTodoHandler = (id: number) => {
-    if (editTodo) {
-      console.log(id);
-      // Здесь можно добавить логику обновления todo
+    const updatePatchTodo = async () => {
+      const updateData = {
+        name: editName,
+        status: editStatus,
+      }
+
+      const {data} = await axios.patch(`http://127.0.0.1:8000/todos/${id}/`, updateData)
+      const updatedTodos = todos.map((todo) => {
+        if(todo.id === id) {
+          todo.name = editName;
+          todo.status = editStatus;
+        }
+        return todo
+      })
+      setTodos(updatedTodos)
+      setEditTodo({})
+      setEditName('')
+      setEditStatus(false)
+      setOpenEditUI(false)
     }
+    updatePatchTodo()
   };
   
 
 
-  const deleteTodoClickHandler = (id: number): void => {
-    setTodos(todos.filter(todo => todo.id !== id));
-    console.log('deleted!!!');
+  const deleteTodoHandler = (id: number): void => {
+    const deleteTodo = async() => {
+      await axios.delete(`http://127.0.0.1:8000/todos/${id}/`)
+      const newTodos = todos.filter((todo) => todo.id !== id)
+      setTodos(newTodos)
+    }
+    deleteTodo()
   }
 
   useEffect(() => {
@@ -38,12 +68,20 @@ function App() {
   }, [])
 
   return (
-    <div className="h-auto bg-secondary position-relative">
+    <div className="min-vh-100 bg-secondary position-relative">
       <div className="h-5 d-inline-block"></div>
       <h1 className="text-center">Todo App</h1>
       <div className="d-flex justify-content-center hstack gap-2">
-        <input className="w-75 bg-body-secondary rounded-start-pill"></input>
-        <div onClick={addTodoClickHandler} className="w-20 bg-body-secondary rounded-end-pill border border-dark-subtle border-3">
+        <input 
+          type="text"
+          id="myInput" 
+          maxLength={200}
+          className="w-75 bg-body-secondary rounded-start-pill"
+          placeholder="Add todo here..."
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <div onClick={addTodoHandler} className="w-20 bg-body-secondary rounded-end-pill border border-dark-subtle border-3">
           <i className="text-success fa-solid fa-square-plus"></i>
         </div>
       </div>
@@ -74,7 +112,7 @@ function App() {
                 {todo.status && (
                   <div className="text-center position-relative">
                     <span className="text-light-emphasis">(Completed)</span>
-                    <i onClick={() => deleteTodoClickHandler(todo.id)} className="text-danger fs-3 position-absolute bottom-0 end-0 fa-regular fa-trash-can"></i>
+                    <i onClick={() => deleteTodoHandler(todo.id)} className="text-danger fs-3 position-absolute bottom-0 end-0 fa-regular fa-trash-can"></i>
                   </div>
                 )}
               </li>
