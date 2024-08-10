@@ -2,18 +2,27 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import { Todo } from "../types";
-import { TodoListProps } from "../types";
 
 function App() {
 
   const [todos, setTodos] = useState<Todo[]>([])
   const [editStatus, setEditStatus] = useState(false)
   const [editName, setEditName] = useState('')
-  const [openEditUI, setOpenEditUI] = useState(true)
+  const [editTodo, setEditTodo] = useState({})
+  const [openEditUI, setOpenEditUI] = useState(false)
 
   const addTodoClickHandler = (): void => {
     console.log('works!!!');
   }
+
+  const editTodoHandler = (id: number) => {
+    if (editTodo) {
+      console.log(id);
+      // Здесь можно добавить логику обновления todo
+    }
+  };
+  
+
 
   const deleteTodoClickHandler = (id: number): void => {
     setTodos(todos.filter(todo => todo.id !== id));
@@ -40,13 +49,18 @@ function App() {
       </div>
       <div className="h-5 d-inline-block"></div>
       <div className="row">
-        <div className="col-md-2"></div>
+        <div className="col-md-1"></div>
         <ol className="col d-inline-block">
           {todos?.map((todo: Todo) => {
             const chunkedName = todo.name.match(/.{1,50}/g); // Разбиваем строку на части по 20 символов
             return (
               <li key={todo.id} className="col bg-secondary-subtle mb-1 rounded-4">
-                <p className="text-center">
+                <p className="text-center" onClick={() => {
+                  setEditStatus(todo.status)
+                  setEditName(todo.name)
+                  setEditTodo(todo)
+                  setOpenEditUI(true)
+                }}>
                   <div key={todo.id} className="todo-item">
                     {chunkedName && chunkedName.map((chunk, chunkIndex) => (
                       <span key={chunkIndex}>
@@ -70,15 +84,20 @@ function App() {
         <div className="col-md-4">
           <div className={`position-fixed row h-15 w-20 bg-secondary ${openEditUI ? "" : "invisible"}`}>
             <div className="col-md-2"></div>
-            <div className="col bg-body-secondary rounded-4">
-              <div className="row">
-                <span className="col text-center fs-6">Edit</span>
-                <div className="col-md-3 align-middle">
-                  < input type="checkbox" checked={editStatus} onChange={() => setEditStatus(!editStatus)}/>
-                </div>
-                <i onClick={() => setOpenEditUI(false)} className="text-danger col-md-3 fs-5 fa-solid fa-xmark"></i>
-              </div>
-            </div>
+            <ul className="col bg-body-secondary rounded-4">
+              <li className="d-flex justify-content-around hstack gap-2">
+                <span className="fs-6">Editor</span>
+                < input type="checkbox" checked={editStatus} onChange={() => setEditStatus(!editStatus)}/>
+                <i>status</i>
+                <i onClick={() => setOpenEditUI(false)} className="text-danger fs-5 fa-solid fa-xmark"></i>
+              </li>
+              <li className="input-group">
+                <textarea className="form-control" value={editName} onChange={(e) => setEditName(e.target.value)}></textarea>
+              </li>
+              <li>
+                <button onClick={() => editTodoHandler(editTodo.id)} className="btn btn-success">Update</button>
+              </li>
+            </ul>
             <div className="col-md-2"></div>
           </div>
         </div>
