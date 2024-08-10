@@ -130,7 +130,7 @@ function App() {
                 <i onClick={() => setOpenEditUI(false)} className="text-danger fs-5 fa-solid fa-xmark"></i>
               </li>
               <li className="input-group">
-                <textarea className="form-control" value={editName} onChange={(e) => setEditName(e.target.value)}></textarea>
+                <textarea className="form-control" maxLength={200} value={editName} onChange={(e) => setEditName(e.target.value)}></textarea>
               </li>
               <li>
                 <button onClick={() => editTodoHandler(editTodo.id)} className="btn btn-success">Update</button>
